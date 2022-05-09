@@ -1,0 +1,89 @@
+version: "3.9"
+
+services:
+  nginx:
+    build:
+      context: .docker/
+      dockerfile: nginx.dockerfile
+    links:
+      - node1:node1
+      - node2:node2
+      - node3:node3
+    depends_on:
+      - node1
+      - node2
+      - node3
+      - mongo
+      # - rabbitmq
+    ports:
+      - "8080:80"
+    networks:
+      - app-network
+    restart: on-failure
+
+  node1:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - ./server:/usr/src/app
+    ports:
+      - "3000"
+    environment:
+      - INSTANCE=node1
+    networks:
+      - app-network
+    restart: on-failure
+
+  node2:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - ./server:/usr/src/app
+    ports:
+      - "3000"
+    environment:
+      - INSTANCE=node2
+    networks:
+      - app-network
+    restart: on-failure
+
+  node3:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - ./server:/usr/src/app
+    ports:
+      - "3000"
+    environment:
+      - INSTANCE=node3
+    networks:
+      - app-network
+    restart: on-failure
+
+  mongo:
+    image: mongo:latest
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    networks:
+      - app-network
+    restart: on-failure
+
+  # rabbitmq:
+  #   image: rabbitmq:latest
+  #   ports:
+  #     - "5672:5672"
+  #   networks:
+  #     - app-network
+  #   restart: on-failure
+
+networks:
+  app-network:
+    driver: bridge
