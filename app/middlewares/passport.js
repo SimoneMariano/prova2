@@ -2,7 +2,7 @@ const dotenv = require("dotenv");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
-const GoogleUser = require("../models/GoogleUser");
+const User = require("../models/User");
 
 dotenv.config();
 
@@ -22,11 +22,11 @@ passport.use(
         profilePicture: profile.photos[0].value,
       };
       /* check if user is in mongo */
-      await GoogleUser.findOne({ googleId: loggedUser.googleId })
+      await User.findOne({ googleId: loggedUser.googleId })
         .then(async (result) => {
           /* user not registered */
           if (!result) {
-            result = await GoogleUser(loggedUser).save();
+            result = await User(loggedUser).save();
           }
           return done(null, result);
         })
@@ -42,7 +42,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (user, done) => {
-  await GoogleUser.findOne({ googleId: user.googleId })
+  await User.findOne({ googleId: user.googleId })
     .then((result) => {
       return done(null, result);
     })

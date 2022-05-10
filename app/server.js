@@ -7,6 +7,7 @@ const session = require("express-session");
 const mongoose = require("mongoose");
 
 const { passport } = require("./middlewares/passport");
+const dashboardRoutes = require("./routes/dashboard");
 const googleOauthRoutes = require("./routes/auth");
 
 dotenv.config();
@@ -16,6 +17,9 @@ const MONGO_URI = process.env.MONGO_URI || "";
 const PORT = process.env.PORT || 3000;
 
 const app = express();
+
+/* set view engine */
+app.set("view engine", "ejs");
 
 /* set middlewares */
 app.use(bodyParser.json());
@@ -40,9 +44,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 /* set routes */
+app.use("/dashboard", dashboardRoutes);
 app.use("/auth", googleOauthRoutes);
 
 /* set root path */
+app.get("/", (req, res) => {
+  res.render("welcome", { title: "Socialify" });
+});
 
 /* set mongo connection */
 mongoose
