@@ -1,8 +1,7 @@
 # directories
 data/
-server/node_modules/
+app/node_modules/
 
 # files
-server/package-lock.json
-server/.env
-.env
+app/package-lock.json
+app/.env

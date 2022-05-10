@@ -1,9 +1,0 @@
-# directories
-server/node_modules/
-
-# files
-.docker/nginx.dockerfile
-server/Dockerfile
-server/package-lock.json
-.dockerignore
-docker-compose.yml
