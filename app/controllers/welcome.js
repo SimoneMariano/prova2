@@ -4,6 +4,7 @@ module.exports = {
       title: "Socialify",
       success: req.flash("success"),
       error: req.flash("error"),
+      logged: req.isAuthenticated(),
     });
   },
 };

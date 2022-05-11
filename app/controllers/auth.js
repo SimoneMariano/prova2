@@ -4,22 +4,7 @@ const User = require("../models/User");
 
 module.exports = {
   signupUser: async (req, res) => {
-    const { firstName, lastName, email, password, retypedPassword } = req.body;
-
-    /* form validation */
-    if (!firstName || !lastName || !email || !password || !retypedPassword) {
-      req.flash("error", "completa il form per effettuare la registrazione");
-      res.redirect("/");
-      return;
-    }
-
-    /* password validation */
-    if (password !== retypedPassword) {
-      req.flash("error", "le due password non corrispondono");
-      res.redirect("/");
-      return;
-    }
-
+    const { firstName, lastName, email, password } = req.body;
     /* check if user does not exists in mongo */
     await User.findOne({ email })
       .then(async (result) => {
