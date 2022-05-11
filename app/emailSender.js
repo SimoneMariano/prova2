@@ -2,7 +2,9 @@
    Make sure that Gmail API access is enabled for your Client ID. To do this, search for the Gmail API in Google API Manager and click on “enable”
    This is the link: https://console.developers.google.com/ */
 
-const transporter = nodemailer.createTransport({
+const nodemailer = require('nodemailer');
+
+let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
     secure: true,
@@ -13,8 +15,8 @@ const transporter = nodemailer.createTransport({
     },
   });
   
-  transporter.sendMail({
-    from: "", /* "provvisorio": inserire indirizzo con cui mandare la mail */
+  let info = await transporter.sendMail({
+    from: "lorenzogizzi01@gmail.com", /* "provvisorio": inserire indirizzo con cui mandare la mail */
     to: loggedUser.email,
     subject: "SIGNUP CONFIRMED",
     text: "I hope this message gets through!",
@@ -86,4 +88,5 @@ const transporter = nodemailer.createTransport({
       accessToken: req.session.googleAccessToken,
       expires: 1484314697598,
     },
-  });
+
+});
