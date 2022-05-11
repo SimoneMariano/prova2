@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
   });
   
   transporter.sendMail({
-    from: "sender@example.com", /* "provvisorio": inserire indirizzo con cui mandare la mail */
+    from: "", /* "provvisorio": inserire indirizzo con cui mandare la mail */
     to: loggedUser.email,
     subject: "SIGNUP CONFIRMED",
     text: "I hope this message gets through!",
