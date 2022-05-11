@@ -57,7 +57,7 @@ module.exports = {
         });
 
         var mailOptions = {
-          from: "socialify5@gmail.com",
+          from: process.env.EMAIL_USER,
           to: email,
           subject: "Conferma registrazione",
           html: "<h1> Ti confermiamo che la tua registrazione a Socialify è andata a buon fine. Buon divertimento !! </h1>",
