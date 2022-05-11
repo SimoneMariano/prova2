@@ -19,6 +19,8 @@ passport.use(
       passReqToCallback: true,
     },
     async (req, accessToken, refreshToken, profile, done) => {
+      req.session.googleAccessToken = accessToken;
+      req.session.googleRefreshToken = refreshToken;
       const loggedUser = {
         userId: profile.id,
         firstName: profile.name.givenName,
