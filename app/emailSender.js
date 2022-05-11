@@ -16,7 +16,7 @@ let transporter = nodemailer.createTransport({
   });
   
   let info = await transporter.sendMail({
-    from: "lorenzogizzi01@gmail.com", /* "provvisorio": inserire indirizzo con cui mandare la mail */
+    from: "prova@gmail.com", /* "provvisorio": inserire indirizzo con cui mandare la mail */
     to: loggedUser.email,
     subject: "SIGNUP CONFIRMED",
     text: "I hope this message gets through!",
