@@ -10,13 +10,15 @@ dotenv.config();
 
 /* google strategy for google user */
 passport.use(
+  "signup",
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.GOOGLE_REDIRECT_URI,
+      callbackURL: process.env.GOOGLE_REDIRECT_URI_SIGNUP,
+      passReqToCallback: true,
     },
-    async (accessToken, refreshToken, profile, done) => {
+    async (req, accessToken, refreshToken, profile, done) => {
       const loggedUser = {
         userId: profile.id,
         firstName: profile.name.givenName,
@@ -27,9 +29,46 @@ passport.use(
       /* check if user is in mongo */
       await User.findOne({ userId: loggedUser.userId })
         .then(async (result) => {
+          /* user registered */
+          if (result) {
+            return done(
+              null,
+              false,
+              req.flash("error", "utente già registrato")
+            );
+          }
+          result = await User(loggedUser).save();
+          return done(null, result);
+        })
+        .catch((err) => {
+          console.error(err.message);
+        });
+    }
+  )
+);
+
+passport.use(
+  "signin",
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_REDIRECT_URI_SIGNIN,
+      passReqToCallback: true,
+    },
+    async (req, accessToken, refreshToken, profile, done) => {
+      /* save access token */
+      req.session.accessToken = accessToken;
+      /* check if user is in mongo */
+      await User.findOne({ userId: profile.id })
+        .then(async (result) => {
           /* user not registered */
           if (!result) {
-            result = await User(loggedUser).save();
+            return done(
+              null,
+              false,
+              req.flash("error", "utente non registrato")
+            );
           }
           return done(null, result);
         })
@@ -75,12 +114,21 @@ passport.deserializeUser(async (user, done) => {
 
 module.exports = {
   passport,
-  googleOauth: passport.authenticate("google", { scope: ["email", "profile"] }),
-  googleCallback: passport.authenticate("google", {
+  googleOauthSignin: passport.authenticate("signin", {
+    scope: ["email", "profile"],
+  }),
+  googleOauthSignup: passport.authenticate("signup", {
+    scope: ["email", "profile"],
+  }),
+  googleCallbackSignin: passport.authenticate("signin", {
     successRedirect: "/dashboard",
     failureRedirect: "/",
   }),
-  loginUser: passport.authenticate("local", {
+  googleCallbackSignup: passport.authenticate("signup", {
+    successRedirect: "/dashboard",
+    failureRedirect: "/",
+  }),
+  signinUser: passport.authenticate("local", {
     successRedirect: "/dashboard",
     failureRedirect: "/",
   }),
