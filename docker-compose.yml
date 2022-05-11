@@ -17,6 +17,7 @@ services:
       # - rabbitmq
     ports:
       - "8080:80"
+      - "443:443"
     networks:
       - app-network
     restart: on-failure
