@@ -1,11 +1,11 @@
-const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
-const User = require("../models/User");
-const nodemailer = require('nodemailer');
-
 const dotenv = require("dotenv");
+const { v4: uuidv4 } = require("uuid");
 
-dotenv.config({ path: "../.env" });
+const { sendWelcomeMail } = require("../middlewares/mailer");
+const User = require("../models/User");
+
+dotenv.config();
 
 module.exports = {
   signupUser: async (req, res) => {
@@ -18,6 +18,7 @@ module.exports = {
           res.redirect("/");
           return;
         }
+
         /* hash password */
         const hashedPassword = bcrypt.hashSync(password, 15);
         const signupUser = {
@@ -27,40 +28,10 @@ module.exports = {
           email,
           password: hashedPassword,
         };
+
         await User(signupUser).save();
         req.flash("success", "utente registrato correttamente");
-
-        let transporter = nodemailer.createTransport({
-          host: "smtp.gmail.com",
-          port: 465,
-          secure: true,
-          auth: {
-            type: "OAuth2",
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-          },
-        });
-
-        var mailOptions = {
-          from: process.env.EMAIL_USER,
-          to: email,
-          subject: "Conferma registrazione",
-          html: "<h1> Ti confermiamo che la tua registrazione a Socialify è andata a buon fine. Buon divertimento !! </h1>",
-          auth: {
-              type: "Bearer",
-              user: process.env.EMAIL_USER,
-              pass: process.env.EMAIL_SECRET
-          }
-        }
-
-        transporter.sendMail (mailOptions, function(error, info) {
-            if (error) {
-              console.log(error);
-            }
-            else {
-              console.log("Verification email sent");
-            }
-        })
+        sendWelcomeMail(signupUser.email);
 
         res.redirect("/dashboard");
       })

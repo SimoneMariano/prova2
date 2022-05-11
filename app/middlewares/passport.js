@@ -4,6 +4,7 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const LocalStrategy = require("passport-local").Strategy;
 
+const { sendWelcomeMail } = require("./mailer");
 const User = require("../models/User");
 
 dotenv.config();
@@ -40,6 +41,7 @@ passport.use(
             );
           }
           result = await User(loggedUser).save();
+          sendWelcomeMail(loggedUser.email);
           return done(null, result);
         })
         .catch((err) => {
