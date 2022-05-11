@@ -1,0 +1,50 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.welcome {
+  background-image: url("https://images.unsplash.com/photo-1516251193007-45ef944ab0c6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.form {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  border: 3px solid rgb(204, 204, 204);
+  background: rgba(255, 255, 255, 0.7);
+  transition: 0.5s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  background: rgba(255, 255, 255, 0.7);
+  outline: none;
+  border: 3px solid rgb(0, 0, 0);
+}
+
+@media (max-width: 768px) {
+  .welcome {
+    height: auto !important;
+  }
+
+  .vr {
+    visibility: hidden;
+  }
+}

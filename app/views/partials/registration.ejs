@@ -1,0 +1,47 @@
+<div class="text-start text-white">
+  <form action="/auth/registration" method="post">
+    <div class="w-75 mx-auto mb-3">
+      <label for="firstName" class="form-label">Nome</label>
+      <input type="text" class="form-control" id="firstName" name="firstName" />
+    </div>
+    <div class="w-75 mx-auto mb-3">
+      <label for="lastName" class="form-label">Cognome</label>
+      <input type="text" class="form-control" id="lastName" name="lastName" />
+    </div>
+    <div class="w-75 mx-auto mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input
+        type="email"
+        class="form-control"
+        id="registrationEmail"
+        name="email"
+      />
+    </div>
+    <div class="w-75 mx-auto mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        name="password"
+      />
+    </div>
+    <div class="w-75 mx-auto mb-4">
+      <label for="retypedPassword" class="form-label">
+        Conferma password
+      </label>
+      <input
+        type="password"
+        class="form-control"
+        id="retypedPassword"
+        name="retypedPassword"
+      />
+    </div>
+    <div class="text-center mb-3">
+      <button type="submit" class="btn btn-primary">
+        <i class="fa-solid fa-user-plus"></i>
+        <span class="mx-1 p-1">Registrati</span>
+      </button>
+    </div>
+  </form>
+</div>

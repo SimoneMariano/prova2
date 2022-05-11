@@ -1,8 +1,44 @@
 <!DOCTYPE html>
 <html lang="it">
-<%- include("./partials/head"); %>
-<body>
-    <h1><%- title %></h1>
-    <a href="/auth/google">Accedi con Google</a>
-</body>
+  <%- include("./partials/head"); %>
+  <body>
+    <div class="welcome d-flex flex-column h-100">
+      <%- include("./partials/navbar"); %>
+      <div class="form flex-fill text-center">
+        <div class="d-md-flex justify-content-center flex-column h-100">
+          <%- include("./partials/message") %>
+          <div class="container-fluid row mx-auto p-md-5">
+            <div class="col-md my-md-auto my-5">
+              <div class="text-white mb-4">
+                <h1>Accedi</h1>
+              </div>
+              <%- include("./partials/login"); %>
+              <div class="text-white mb-3">oppure</div>
+              <a href="/auth/google" class="btn btn-light">
+                <i class="fa-brands fa-google"></i>
+                <span class="mx-1 p-1"> Accedi </span>
+              </a>
+            </div>
+            <div class="col-md-1">
+              <div class="d-flex h-100">
+                <div class="vr text-white mx-auto"></div>
+              </div>
+            </div>
+            <div class="col-md my-md-auto my-5">
+              <div class="text-white mb-4">
+                <h1>Registrati</h1>
+              </div>
+              <%- include("./partials/registration"); %>
+              <div class="text-white mb-3">oppure</div>
+              <a href="/auth/google" class="btn btn-light">
+                <i class="fa-brands fa-google"></i>
+                <span class="mx-1 p-1"> Registrati </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%- include("./partials/footer"); %>
+    </div>
+  </body>
 </html>

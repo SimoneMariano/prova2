@@ -1,14 +1,17 @@
 const bodyParser = require("body-parser");
+const flash = require("connect-flash");
 const MongoStore = require("connect-mongo");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const express = require("express");
 const session = require("express-session");
 const mongoose = require("mongoose");
+const path = require("path");
 
 const { passport } = require("./middlewares/passport");
 const dashboardRoutes = require("./routes/dashboard");
-const googleOauthRoutes = require("./routes/auth");
+const authRoutes = require("./routes/auth");
+const welcomeRoutes = require("./routes/welcome");
 
 dotenv.config();
 
@@ -25,6 +28,8 @@ app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
+app.use(flash());
 app.use(
   session({
     cookie: {
@@ -45,12 +50,8 @@ app.use(passport.session());
 
 /* set routes */
 app.use("/dashboard", dashboardRoutes);
-app.use("/auth", googleOauthRoutes);
-
-/* set root path */
-app.get("/", (req, res) => {
-  res.render("welcome", { title: "Socialify" });
-});
+app.use("/auth", authRoutes);
+app.use("/", welcomeRoutes);
 
 /* set mongo connection */
 mongoose

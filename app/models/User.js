@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const schema = new mongoose.Schema({
-  googleId: {
+  userId: {
     type: String,
     required: true,
     unique: true,
@@ -19,10 +19,14 @@ const schema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  password: {
+    type: String,
+  },
   profilePicture: {
     type: String,
-    required: true,
+    default:
+      "https://images.unsplash.com/photo-1507808973436-a4ed7b5e87c9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1160&q=80",
   },
 });
 
-module.exports = mongoose.model("googleUser", schema);
+module.exports = mongoose.model("user", schema);
