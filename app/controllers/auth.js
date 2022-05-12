@@ -9,7 +9,22 @@ dotenv.config();
 
 module.exports = {
   signupUser: async (req, res) => {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, retypedPassword } = req.body;
+
+    /* form validation */
+    if (!firstName || !lastName || !email || !password || !retypedPassword) {
+      req.flash("error", "completa il form per effettuare la registrazione");
+      res.redirect("/");
+      return;
+    }
+
+    /* password validation */
+    if (password !== retypedPassword) {
+      req.flash("error", "le due password non corrispondono");
+      res.redirect("/");
+      return;
+    }
+
     /* check if user does not exists in mongo */
     await User.findOne({ email })
       .then(async (result) => {
@@ -27,13 +42,13 @@ module.exports = {
           lastName,
           email,
           password: hashedPassword,
+          service: "local",
         };
 
         await User(signupUser).save();
         req.flash("success", "utente registrato correttamente");
         sendWelcomeMail(signupUser.email);
-
-        res.redirect("/dashboard");
+        res.redirect("/");
       })
       .catch((err) => {
         console.error(err.message);

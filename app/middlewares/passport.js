@@ -20,17 +20,16 @@ passport.use(
       passReqToCallback: true,
     },
     async (req, accessToken, refreshToken, profile, done) => {
-      req.session.googleAccessToken = accessToken;
-      req.session.googleRefreshToken = refreshToken;
       const loggedUser = {
         userId: profile.id,
         firstName: profile.name.givenName,
         lastName: profile.name.familyName,
         email: profile.emails[0].value,
         profilePicture: profile.photos[0].value,
+        service: "google",
       };
       /* check if user is in mongo */
-      await User.findOne({ userId: loggedUser.userId })
+      await User.findOne({ email: loggedUser.email })
         .then(async (result) => {
           /* user registered */
           if (result) {
@@ -64,7 +63,7 @@ passport.use(
       /* save access token */
       req.session.accessToken = accessToken;
       /* check if user is in mongo */
-      await User.findOne({ userId: profile.id })
+      await User.findOne({ email: profile.emails[0].value, service: "google" })
         .then(async (result) => {
           /* user not registered */
           if (!result) {
@@ -88,9 +87,9 @@ passport.use(
   new LocalStrategy(
     { usernameField: "email", passReqToCallback: true },
     async (req, email, password, done) => {
-      await User.findOne({ email })
+      await User.findOne({ email, service: "local" })
         .then((result) => {
-          if (!result || !bcrypt.compareSync(password, result.password)) {
+          if (!bcrypt.compareSync(password, result.password)) {
             return done(null, false, req.flash("error", "credenziali errate"));
           }
           return done(null, result);
@@ -118,21 +117,18 @@ passport.deserializeUser(async (user, done) => {
 
 module.exports = {
   passport,
-  googleOauthSignin: passport.authenticate("signin", {
-    scope: ["email", "profile"],
-  }),
-  googleOauthSignup: passport.authenticate("signup", {
-    scope: ["email", "profile"],
-  }),
-  googleCallbackSignin: passport.authenticate("signin", {
-    successRedirect: "/dashboard",
-    failureRedirect: "/",
-  }),
-  googleCallbackSignup: passport.authenticate("signup", {
-    successRedirect: "/dashboard",
-    failureRedirect: "/",
-  }),
-  signinUser: passport.authenticate("local", {
+  googleOAuth: (type) => {
+    return passport.authenticate(type, {
+      scope: ["email", "profile"],
+    });
+  },
+  googleCallback: (type) => {
+    return passport.authenticate(type, {
+      successRedirect: "/dashboard",
+      failureRedirect: "/",
+    });
+  },
+  localAuth: passport.authenticate("local", {
     successRedirect: "/dashboard",
     failureRedirect: "/",
   }),
