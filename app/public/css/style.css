@@ -26,7 +26,8 @@ body {
 
 input[type="text"],
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+.form-control {
   border: 3px solid rgb(204, 204, 204);
   background: rgba(255, 255, 255, 0.7);
   transition: 0.5s;
@@ -34,10 +35,15 @@ input[type="password"] {
 
 input[type="text"]:focus,
 input[type="email"]:focus,
-input[type="password"]:focus {
+input[type="password"]:focus,
+.form-control {
   background: rgba(255, 255, 255, 0.7);
   outline: none;
   border: 3px solid rgb(0, 0, 0);
+}
+
+.form-control {
+  resize: none;
 }
 
 @media (max-width: 768px) {
@@ -45,7 +51,7 @@ input[type="password"]:focus {
     height: auto !important;
   }
 
-  .welcome {
+  .dashboard {
     height: 100% !important;
   }
 
