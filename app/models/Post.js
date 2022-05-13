@@ -6,7 +6,8 @@ const schema = new mongoose.Schema({
     ref: "user",
   },
   content: {
-    type: Text,
+    type: String,
+    required: true,
   },
   photos: [
     {

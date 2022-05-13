@@ -1,0 +1,234 @@
+const Post = require("../models/Post");
+const user = require("../models/User");
+
+module.exports = {
+  /**
+   * @api {post} /api/v1/post Create new post
+   * @apiName CreatePost
+   *
+   * @apiBody {Object} post Post
+   * @apiBody {String} post[user] User's ID
+   * @apiBody {String} post[content] Content of post
+   * @apiBody {String[]} post[[photos]] Optional photos pf post
+   *
+   * @apiSuccess {Object} Created Post
+   * @apiSuccessExample {json} Success-Response:
+   *
+   * HTTP/1.1 200 OK
+   * {
+   *    "user": "0123456789",
+   *    "content": "post's description"
+   * }
+   *
+   * @apiError UserNotFound The Id's user was not found
+   * @apiErrorExample {json} Error-Response:
+   *
+   * HTTP/1.1 404 NOT FOUND
+   * {
+   *    "error": "UserNotFound"
+   * }
+   *
+   */
+  createPost: async (req, res) => {
+    const { content, photos } = req.body;
+    const user = req.session.passport.user.UserId;
+
+    const createdPost = {
+      user,
+      content,
+    };
+
+    if (photos.length > 0) {
+      createdPost.photos = photos;
+    }
+
+    await Post(createdPost).catch((err) => {
+      console.error(err.message);
+      res.sendStatus(500);
+    });
+  },
+
+  /**
+   * @api {get} /api/v1/post Get all post
+   * @apiName GetAllPost
+   *
+   * @apiSuccess {Object} Return all post
+   * @apiSuccessExample {json} Success-Response:
+   *
+   * HTTP/1.1 200 OK
+   * [
+   *    {
+   *        "user": "0123456789",
+   *        "content": "post's description #1"
+   *    },
+   *    {
+   *        "user": "9876543210",
+   *        "content": "post's description #2"
+   *    }
+   * ]
+   *
+   * @apiError UserNotFound The Id's user was not found
+   * @apiErrorExample {json} Error-Response:
+   *
+   * HTTP/1.1 404 NOT FOUND
+   * {
+   *    "error": "UserNotFound"
+   * }
+   *
+   */
+  getAllPost: async () => {},
+
+  /**
+   * @api {get} /api/v1/post/:id Get all user's post
+   * @apiName GetUserPost
+   *
+   * @apiParam {String} id User's ID
+   *
+   * @apiSuccess {Object} Return user's post
+   * @apiSuccessExample {json} Success-Response:
+   *
+   * HTTP/1.1 200 OK
+   * [
+   *    {
+   *        "user": "0123456789",
+   *        "content": "post's description #1"
+   *    },
+   *    {
+   *        "user": "0123456789",
+   *        "content": "post's description #2 with photos",
+   *        "photos": ["photo#1.jpg", "photo#2.pgn"]
+   *    }
+   * ]
+   *
+   * @apiError UserNotFound The Id's user was not found
+   * @apiErrorExample {json} Error-Response:
+   *
+   * HTTP/1.1 404 NOT FOUND
+   * {
+   *    "error": "UserNotFound"
+   * }
+   *
+   */
+  getUserPost: async (req, res) => {},
+
+  /**
+   * @api {get} /api/v1/post/:user/:id Get user's post
+   * @apiName GetUserPost
+   *
+   * @apiParam {String} user User's ID
+   * @apiParam {String} id Post's ID
+   *
+   * @apiSuccess {Object} Return user's post
+   * @apiSuccessExample {json} Success-Response:
+   *
+   * HTTP/1.1 200 OK
+   * [
+   *    {
+   *        "user": "0123456789",
+   *        "content": "post's description #1"
+   *    },
+   *    {
+   *        "user": "0123456789",
+   *        "content": "post's description #2 with photos",
+   *        "photos": ["photo#1.jpg", "photo#2.pgn"]
+   *    }
+   * ]
+   *
+   * @apiError UserNotFound The Id's user was not found
+   * @apiErrorExample {json} Error-Response:
+   *
+   * HTTP/1.1 404 NOT FOUND
+   * {
+   *    "error": "UserNotFound"
+   * }
+   *
+   */
+  getPostById: async (req, res) => {},
+
+  /**
+   * @api {patch} /api/v1/post/:id Update post
+   * @apiName UpdatePostById
+   *
+   * @apiParam {String} id Post's ID
+   *
+   * @apiBody {Object} post Post
+   * @apiBody {String} post[user] User's ID
+   * @apiBody {String} post[content] Content of updated post
+   *
+   * @apiSuccess {Object} Return updated post
+   * @apiSuccessExample {json} Success-Response:
+   *
+   * HTTP/1.1 200 OK
+   * [
+   *    {
+   *        "user": "0123456789",
+   *        "content": "post's description #1 updated"
+   *    }
+   * ]
+   *
+   * @apiError UserNotFound The Id's user was not found
+   * @apiErrorExample {json} Error-Response:
+   *
+   * HTTP/1.1 404 NOT FOUND
+   * {
+   *    "error": "UserNotFound"
+   * }
+   *
+   */
+  updatePostById: async (req, res) => {},
+
+  /**
+   * @api {delete} /api/v1/post/ Delete all post
+   * @apiName DeleteAllPost
+   *
+   * @apiSuccess {Object} Return deleted post
+   * @apiSuccessExample {json} Success-Response:
+   *
+   * HTTP/1.1 200 OK
+   * [
+   *    {
+   *        "user": "0123456789",
+   *        "content": "post's description #1 deleted"
+   *    }
+   * ]
+   *
+   * @apiError UserNotFound The Id's user was not found
+   * @apiErrorExample {json} Error-Response:
+   *
+   * HTTP/1.1 404 NOT FOUND
+   * {
+   *    "error": "UserNotFound"
+   * }
+   *
+   */
+  deleteAllPost: async (req, res) => {},
+
+  /**
+   * @api {delete} /api/v1/post/:user/:id Delete user's post
+   * @apiName DeleteUserPost
+   *
+   * @apiParam {String} user User's ID
+   * @apiParam {String} id Post's ID
+   *
+   * @apiSuccess {Object} Return deleted post
+   * @apiSuccessExample {json} Success-Response:
+   *
+   * HTTP/1.1 200 OK
+   * [
+   *    {
+   *        "user": "0123456789",
+   *        "content": "post's description #1 deleted"
+   *    }
+   * ]
+   *
+   * @apiError UserNotFound The Id's user was not found
+   * @apiErrorExample {json} Error-Response:
+   *
+   * HTTP/1.1 404 NOT FOUND
+   * {
+   *    "error": "UserNotFound"
+   * }
+   *
+   */
+  deletePostById: async (req, res) => {},
+};

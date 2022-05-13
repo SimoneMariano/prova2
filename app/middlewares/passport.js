@@ -20,6 +20,8 @@ passport.use(
       passReqToCallback: true,
     },
     async (req, accessToken, refreshToken, profile, done) => {
+      /* save access token */
+      req.session.accessToken = accessToken;
       const loggedUser = {
         userId: profile.id,
         firstName: profile.name.givenName,
