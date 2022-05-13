@@ -76,27 +76,30 @@ module.exports = {
 
         channel.assertQueue(QUEUE);
         channel.consume(QUEUE, async (message) => {
-          const createdPost = JSON.parse(message.content.toString());
+          const post = JSON.parse(message.content.toString());
           channel.ack(message);
 
           await User.findOne({ _id: author })
-            .then(async () => {
-              await Post(createdPost)
-                .save()
-                .then((result) => {
-                  res.status(200).json(result);
-                })
-                .catch((err) => {
-                  console.error(err.message);
-                  res.sendStatus(500);
-                });
+            .then(async (result) => {
+              if (!result) {
+                console.error(err.message);
+                res.send(404).json({ error: "User Not Found" });
+              }
             })
             .catch((err) => {
               console.error(err.message);
-              res.send(404).json({ error: "User Not Found" });
+              res.sendStatus(500);
+            });
+
+          await Post(post)
+            .save()
+            .catch((err) => {
+              console.error(err.message);
+              res.sendStatus(500);
             });
         });
       });
+      res.redirect("/dashboard");
     });
   },
 

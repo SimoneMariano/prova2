@@ -51,12 +51,9 @@ input[type="password"]:focus,
 }
 
 @media (max-width: 768px) {
-  .welcome {
-    height: auto !important;
-  }
-
+  .welcome,
   .dashboard {
-    height: 100% !important;
+    height: auto !important;
   }
 
   .vr {
