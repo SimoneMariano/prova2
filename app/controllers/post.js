@@ -1,5 +1,12 @@
+const amqp = require("amqplib/callback_api");
+const dotenv = require("dotenv");
+
 const Post = require("../models/Post");
 const User = require("../models/User");
+
+dotenv.config();
+
+const QUEUE = process.env.QUEUE || "";
 
 module.exports = {
   /**
@@ -40,22 +47,57 @@ module.exports = {
       content,
     };
 
-    await User.findOne({ _id: author })
-      .then(async () => {
-        await Post(createdPost)
-          .save()
-          .then((result) => {
-            res.status(200).json(result);
-          })
-          .catch((err) => {
-            console.error(err.message);
-            res.sendStatus(500);
-          });
-      })
-      .catch((err) => {
-        console.error(err.message);
-        res.send(404).json({ error: "User Not Found" });
+    amqp.connect("amqp://rabbitmq", (error, connection) => {
+      if (error) {
+        console.error(error.message);
+        res.sendStatus(500);
+        return;
+      }
+
+      /* producer send post post to consumer */
+      connection.createChannel((error, channel) => {
+        if (error) {
+          console.error(error.message);
+          res.sendStatus(500);
+          return;
+        }
+
+        channel.assertQueue(QUEUE);
+        channel.sendToQueue(QUEUE, Buffer.from(JSON.stringify(createdPost)));
       });
+
+      /* consumer save created post */
+      connection.createChannel((error, channel) => {
+        if (error) {
+          console.error(error.message);
+          res.sendStatus(500);
+          return;
+        }
+
+        channel.assertQueue(QUEUE);
+        channel.consume(QUEUE, async (message) => {
+          const createdPost = JSON.parse(message.content.toString());
+          channel.ack(message);
+
+          await User.findOne({ _id: author })
+            .then(async () => {
+              await Post(createdPost)
+                .save()
+                .then((result) => {
+                  res.status(200).json(result);
+                })
+                .catch((err) => {
+                  console.error(err.message);
+                  res.sendStatus(500);
+                });
+            })
+            .catch((err) => {
+              console.error(err.message);
+              res.send(404).json({ error: "User Not Found" });
+            });
+        });
+      });
+    });
   },
 
   /**
