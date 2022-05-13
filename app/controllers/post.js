@@ -32,9 +32,11 @@ module.exports = {
   createPost: async (req, res) => {
     const { content, photos } = req.body;
     const author = req.session.passport.user._id;
+    const displayName = `${req.session.passport.user.firstName} ${req.session.passport.user.lastName}`;
 
     const createdPost = {
       author,
+      displayName,
       content,
     };
 
@@ -84,7 +86,16 @@ module.exports = {
    * }
    *
    */
-  getAllPost: async () => {},
+  getAllPost: async (req, res) => {
+    await Post.find({})
+      .then((result) => {
+        res.status(200).json(result);
+      })
+      .catch((err) => {
+        console.error(err.message);
+        res.sendStatus(500);
+      });
+  },
 
   /**
    * @api {get} /api/v1/post/:id Get all user's post

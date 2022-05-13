@@ -5,7 +5,16 @@
     <div class="dashboard d-flex flex-column h-100">
       <%- include("./partials/navbar"); %>
       <div class="form flex-fill text-center">
-        <%- include("./partials/post") %>
+        <div class="d-md-flex justify-content-center flex-column h-100">
+          <div class="container-fluid row mx-auto p-md-5">
+            <div class="col-md my-md-auto my-5">
+              <%- include("./partials/post") %>
+            </div>
+            <div class="col-md my-md-auto my-5">
+              <%- include("./partials/feed") %>
+            </div>
+          </div>
+        </div>
       </div>
       <%- include("./partials/footer"); %>
     </div>

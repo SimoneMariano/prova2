@@ -1,8 +1,18 @@
+const Post = require("../models/Post");
+
 module.exports = {
-  renderPage: (req, res) => {
-    res.render("dashboard", {
-      title: "Dashboard",
-      logged: req.isAuthenticated(),
-    });
+  renderPage: async (req, res) => {
+    await Post.find({})
+      .then((result) => {
+        res.render("dashboard", {
+          title: "Dashboard",
+          logged: req.isAuthenticated(),
+          post: result,
+        });
+      })
+      .catch((err) => {
+        console.error(err.message);
+        res.sendStatus(500);
+      });
   },
 };
