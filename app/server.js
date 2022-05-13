@@ -9,8 +9,9 @@ const mongoose = require("mongoose");
 const path = require("path");
 
 const { passport } = require("./middlewares/passport");
-const dashboardRoutes = require("./routes/dashboard");
 const authRoutes = require("./routes/auth");
+const dashboardRoutes = require("./routes/dashboard");
+const apiRoutes = require("./routes/post");
 const welcomeRoutes = require("./routes/welcome");
 
 dotenv.config();
@@ -49,8 +50,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 /* set routes */
-app.use("/dashboard", dashboardRoutes);
 app.use("/auth", authRoutes);
+app.use("/dashboard", dashboardRoutes);
+app.use("/api/v1/post", apiRoutes);
 app.use("/", welcomeRoutes);
 
 /* set mongo connection */

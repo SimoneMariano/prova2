@@ -1,5 +1,5 @@
 const Post = require("../models/Post");
-const user = require("../models/User");
+const User = require("../models/User");
 
 module.exports = {
   /**
@@ -31,21 +31,29 @@ module.exports = {
    */
   createPost: async (req, res) => {
     const { content, photos } = req.body;
-    const user = req.session.passport.user.UserId;
+    const author = req.session.passport.user._id;
 
     const createdPost = {
-      user,
+      author,
       content,
     };
 
-    if (photos.length > 0) {
-      createdPost.photos = photos;
-    }
-
-    await Post(createdPost).catch((err) => {
-      console.error(err.message);
-      res.sendStatus(500);
-    });
+    await User.findOne({ _id: author })
+      .then(async () => {
+        await Post(createdPost)
+          .save()
+          .then((result) => {
+            res.status(200).json(result);
+          })
+          .catch((err) => {
+            console.error(err.message);
+            res.sendStatus(500);
+          });
+      })
+      .catch((err) => {
+        console.error(err.message);
+        res.send(404).json({ error: "User Not Found" });
+      });
   },
 
   /**
