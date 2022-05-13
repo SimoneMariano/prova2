@@ -99,7 +99,7 @@ module.exports = {
             });
         });
       });
-      res.redirect("/dashboard");
+      return res.status(200).json(createdPost);
     });
   },
 

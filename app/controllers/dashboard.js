@@ -1,18 +1,17 @@
-const Post = require("../models/Post");
+const axios = require("axios").default;
 
 module.exports = {
   renderPage: async (req, res) => {
-    await Post.find({})
+    await axios
+      .get("http://localhost:3000/api/v1/post")
       .then((result) => {
+        const { data } = result;
         res.render("dashboard", {
           title: "Dashboard",
           logged: req.isAuthenticated(),
-          post: result,
+          post: data,
         });
       })
-      .catch((err) => {
-        console.error(err.message);
-        res.sendStatus(500);
-      });
+      .catch((err) => res.send(err.message));
   },
 };
