@@ -3,7 +3,7 @@ const axios = require("axios").default;
 module.exports = {
   renderPage: async (req, res) => {
     await axios
-      .get("http://localhost:3000/api/v1/post")
+      .get("http://nginx:80/api/v1/post")
       .then((result) => {
         const { data } = result;
         res.render("dashboard", {
@@ -12,6 +12,6 @@ module.exports = {
           post: data,
         });
       })
-      .catch((err) => res.send(err.message));
+      .catch((err) => res.send(err));
   },
 };

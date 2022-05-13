@@ -2,6 +2,7 @@ const bodyParser = require("body-parser");
 const flash = require("connect-flash");
 const MongoStore = require("connect-mongo");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 const dotenv = require("dotenv");
 const express = require("express");
 const session = require("express-session");
@@ -29,6 +30,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(flash());
 app.use(
@@ -36,12 +38,13 @@ app.use(
     cookie: {
       /* cookie's lifetime: one day */
       maxAge: 1000 * 60 * 60 * 24,
-      secure: false,
+      secure: true,
     },
     resave: false,
     saveUninitialized: true,
     secret: process.env.SECRET,
     store: new MongoStore({ mongoUrl: MONGO_URI }),
+    unset: "destroy",
   })
 );
 

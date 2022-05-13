@@ -41,6 +41,10 @@ module.exports = {
     const author = req.session.passport.user._id;
     const displayName = `${req.session.passport.user.firstName} ${req.session.passport.user.lastName}`;
 
+    if (!author) {
+      return res.send(400).json({ message: "Unauthorized" });
+    }
+
     const createdPost = {
       author,
       displayName,
