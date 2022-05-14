@@ -14,7 +14,7 @@ jobs:
       - name: Build the stack
         run: docker-compose up -d
       - name: Test
-        run: docker run --network container:prova2-node1-1 appropriate/curl -s --retry 10 --retry-connrefused http://localhost:8080/
+        run: docker run --network container:prova2_node1_1 appropriate/curl -s --retry 10 --retry-connrefused http://localhost:8080/
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
