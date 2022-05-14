@@ -9,6 +9,8 @@ describe("GET /", () => {
   });
 });
 
+
+/*
 describe("GET /auth/google", () => {
   it("send GET request to http://localhost:8080/auth/google", async () => {
     await axios.get("http://localhost:8080/auth/google").then((result) => {
@@ -16,6 +18,7 @@ describe("GET /auth/google", () => {
     });
   });
 });
+*/
 
 describe("GET /dashboard", () => {
   it("send GET request to http://localhost:8080/dashboard", async () => {
