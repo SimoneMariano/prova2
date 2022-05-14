@@ -16,6 +16,7 @@ jobs:
           node-version: '14'
       - run: |
           npm install
+          npm install -D nodemon
         working-directory: ./app
       - name: Build the stack
         run: docker-compose up -d
