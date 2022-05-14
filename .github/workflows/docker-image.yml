@@ -20,6 +20,7 @@ jobs:
         run: docker-compose up -d
       - name: Install composer dependencies
         run: |
+          npm install --save-dev mocha
           npm test
         working-directory: ./app
       
