@@ -11,12 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Build the stack
+        run: docker-compose up -d
       - name: Install composer dependencies
         run: |
           npm config set unsafe-perm=true
           npm install
           npm test
         working-directory: ./app
-      - name: Build the stack
-        run: docker-compose up -d
       
