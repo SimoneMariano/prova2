@@ -11,16 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - name: Install Dependencies
-        run: npm install
       - name: Build the stack
         run: docker-compose up -d
       - name: Install composer dependencies
         run: |
-          npm install --save-dev mocha
+          - uses: actions/setup-node@v2
+            with:
+              node-version: '14'
+          - name: Install Dependencies
+            run: npm install
           npm test
         working-directory: ./app
       
