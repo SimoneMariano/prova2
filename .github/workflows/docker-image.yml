@@ -22,6 +22,6 @@ jobs:
         run: docker-compose up -d
       - name: Install composer dependencies
         run: |
-          docker exec prova2-node3-1 npm test
+          docker exec prova2_node1_1 npm test
         working-directory: ./app
       
